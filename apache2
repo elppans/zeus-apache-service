@@ -1,0 +1,55 @@
+#!/bin/bash
+
+comando="$0"
+parametro="$@"
+
+iniciar() {
+if [ -e /usr/local/apache2/logs/httpd.pid ]; then
+	rm -rf /usr/local/apache2/logs/httpd.pid &>>/dev/null
+	/usr/local/apache22/bin/apache stop
+	exit 0
+fi
+	/usr/local/apache22/bin/apache start
+}
+
+parar() {
+        /usr/local/apache22/bin/apache stop
+        rm -rf /usr/local/apache2/logs/httpd.pid &>>/dev/null
+
+}
+
+estado() {
+if [ -f /usr/local/apache2/logs/httpd.pid ]; then
+	ps aux | grep httpd | grep -v grep
+	kill -0 $(cat /usr/local/apache2/logs/httpd.pid) && echo "Apache está rodando..." || echo "Apache está parado..."
+else
+	ps aux | grep httpd | grep -v grep || echo "Apache está parado..."
+fi
+
+
+}
+case "$parametro" in
+	start|--start|-s)
+		echo "Iniciando serviço apache2..."
+		iniciar
+	;;
+	stop|--stop|-t)
+		echo "Parando serviço apache2..."
+		parar
+	;;
+	restart|--restart|-r)
+             	echo "Parando serviço apache2..."
+                parar
+		sleep 1
+              	echo "Iniciando serviço apache2..."
+                iniciar
+	;;
+	status|--status|-a)
+		estado
+	;;
+	*)
+		echo erro
+		exit 1
+	;;
+esac
+
