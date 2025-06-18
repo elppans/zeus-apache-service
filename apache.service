@@ -9,6 +9,8 @@ Type=forking
 EnvironmentFile=/etc/sysconfig/httpd
 ExecStart=/usr/local/bin/apache2 start
 ExecStop=/usr/local/bin/apache2 stop
+Restart=always
+RestartSec=5s
 
 [Install]
 WantedBy=multi-user.target
